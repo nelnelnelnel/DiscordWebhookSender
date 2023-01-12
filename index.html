@@ -1,104 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>code's discord webhook sender</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <div class="container">
-        <!-- form -->
-        <div class="cf">
-            <h1>Discord webhook sender</h1>
-            <p>Developed by <span style="color: #ad6edd;">code</span> for fun</p>
-            <p>*adding embeds soon!*</p>
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Discord webhook sender</title>
+		<link rel="stylesheet" href="style.css" />
+	</head>
+	<body>
+		<div class="container">
+			<!-- form -->
+			<div class="cf">
+				<h1>Discord webhook sender</h1>
+				<p>Developed by <span style="color: #ad6edd;">code</span> for fun</p>
+				<p>*adding embeds soon!*</p>
 
-            <hr class="solid">
-            <br>
+				<hr class="solid" />
+				<br />
 
-            <input type="text" placeholder="URL" name="url" id="url" required>
-            <input type="text" placeholder="Username" name="username" id="username" required>
-            <input type="text" placeholder="Message" name="message" id="message" required>
-            <button type="submit" name="sendWebhook" id="sendWebhook">Send</button>
-            <br>
-            <span id="error"></span>
-            <span id="success"></span>
-        </div>
+				<input type="text" placeholder="URL" name="url" id="url" required />
+				<input type="text" placeholder="Username" name="username" id="username" required />
+				<input type="text" placeholder="Message" name="message" id="message" required />
+				<button type="submit" name="sendWebhook" id="sendWebhook">Send</button>
+				<br />
+				<span id="error"></span>
+				<span id="success"></span>
+			</div>
 
-        <br>
+			<br />
 
-        <!-- preview -->
-        <div class="cf">
-            <h1>Preview</h1>
-            <p>Preview your webhook message here</p>
+			<!-- preview -->
+			<div class="cf">
+				<h1>Preview</h1>
+				<p>Preview your webhook message here</p>
 
-            <hr class="solid">
-            <br>
+				<hr class="solid" />
+				<br />
 
-            <div id="">
-                <span id="user">Code Bot</span>
-                <span id="botbadge">BOT</span>
-                <span id="time"></span>
-                <br>
-                <span style="opacity: .8;" id="msg">Message content</span>
-            </div>
-        </div>
-    </div>
-</body>
+				<div id="preview">
+					<span id="user">Code Bot</span>
+					<span id="botbadge">BOT</span>
+					<span id="time"></span>
+					<br />
+					<span style="opacity: .8;" id="msg">Message content</span>
+				</div>
+			</div>
+		</div>
+	</body>
 
-<script src="https://momentjs.com/downloads/moment.min.js"></script>
+	<script src="https://momentjs.com/downloads/moment.min.js"></script>
 
-<!-- update input -->
-<script>
-    let u = document.getElementById('user');
-    let m = document.getElementById('msg');
+	<!-- update input -->
+	<script>
+		    let u = document.getElementById('user');
+		    let m = document.getElementById('msg');
+		    let error = document.getElementById('error');
+		    let success = document.getElementById('success');
+		    let button = document.getElementById('sendWebhook');
+		    let url = document.getElementById('url');
+		    let username = document.getElementById('username');
+		    let message = document.getElementById('message');
+		    let time = document.getElementById('time');
 
-    document.getElementById('username').addEventListener('keyup', () => {
-        setInterval(() => {
-            let usernameInputVal = document.getElementById('username').value;
-            u.innerHTML = `${usernameInputVal}`;
-        }, 500);
-    });
-    document.getElementById('message').addEventListener('keyup', () => {
-        setInterval(() => {
-            let msgInputVal = document.getElementById('message').value;
-            m.innerHTML = `${msgInputVal}`;
-        }, 500);
-    });
-</script>
+		    time.innerHTML = moment().calendar();
 
-<!-- update time -->
-<script>
-    document.getElementById('time').innerHTML = `${moment().calendar()}`;
-</script>
+		    username.addEventListener('keyup', () => {
+		        clearTimeout(updatePreviewTimeout);
+		        updatePreviewTimeout = setTimeout(() => {
+		            u.innerHTML = username.value;
+		        }, 500);
+		    });
 
-<!-- send webhook -->
-<script>
-    let button = document.getElementById('sendWebhook');
-    button.addEventListener('click', () => {
-        try {
-            let whurl = document.getElementById('url').value;
-            let whusername = document.getElementById('username').value;
-            let whmessage = document.getElementById('message').value;
+		    message.addEventListener('keyup', () => {
+		        clearTimeout(updatePreviewTimeout);
+		        updatePreviewTimeout = setTimeout
+		{
+		clearTimeout(updatePreviewTimeout);
+		updatePreviewTimeout = setTimeout(() => {
+		m.innerHTML = message.value;
+		}, 500);
+		});
+		button.addEventListener('click', () => {
+		    try {
+		        let whurl = url.value;
+		        let whusername = username.value;
+		        let whmessage = message.value;
 
-            const messageData = {
-                "content": whmessage,
-                "username": whusername
-            }
-            fetch(whurl, {
-                "method": "POST",
-                "headers": {
-                    "content-type": "application/json"
-                },
-                "body": JSON.stringify(messageData)
-            }).then(
-                document.getElementById('success').innerHTML = `Webhook sent!`
-            );
-        } catch (err) {
-            document.getElementById('error').innerHTML = `Error! ${err}`;
-        }
-    });
-</script>
+		        const messageData = {
+		            "content": whmessage,
+		            "username": whusername
+		        }
+		        fetch(whurl, {
+		            "method": "POST",
+		            "headers": {
+		                "content-type": "application/json"
+		            },
+		            "body": JSON.stringify(messageData)
+		        })
+		        .then(response => response.json())
+		        .then(responseData => {
+		            if (responseData.success) {
+		                success.innerHTML = "Webhook sent!";
+		            } else {
+		                error.innerHTML = "Error: " + responseData.message;
+		            }
+		        });
+		    } catch (err) {
+		        error.innerHTML = `Error! ${err}`;
+		    }
+		});
+	</script>
 </html>
