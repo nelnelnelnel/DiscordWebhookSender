@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code's discord webhook sender</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- form -->
+        <div class="cf">
+            <h1>Discord webhook sender</h1>
+            <p>Developed by <span style="color: #ad6edd;">code</span> for fun</p>
+            <p>*adding embeds soon!*</p>
+
+            <hr class="solid">
+            <br>
+
+            <input type="text" placeholder="URL" name="url" id="url" required>
+            <input type="text" placeholder="Username" name="username" id="username" required>
+            <input type="text" placeholder="Message" name="message" id="message" required>
+            <button type="submit" name="sendWebhook" id="sendWebhook">Send</button>
+            <br>
+            <span id="error"></span>
+            <span id="success"></span>
+        </div>
+
+        <br>
+
+        <!-- preview -->
+        <div class="cf">
+            <h1>Preview</h1>
+            <p>Preview your webhook message here</p>
+
+            <hr class="solid">
+            <br>
+
+            <div id="">
+                <span id="user">Code Bot</span>
+                <span id="botbadge">BOT</span>
+                <span id="time"></span>
+                <br>
+                <span style="opacity: .8;" id="msg">Message content</span>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script src="https://momentjs.com/downloads/moment.min.js"></script>
+
+<!-- update input -->
+<script>
+    let u = document.getElementById('user');
+    let m = document.getElementById('msg');
+
+    document.getElementById('username').addEventListener('keyup', () => {
+        setInterval(() => {
+            let usernameInputVal = document.getElementById('username').value;
+            u.innerHTML = `${usernameInputVal}`;
+        }, 500);
+    });
+    document.getElementById('message').addEventListener('keyup', () => {
+        setInterval(() => {
+            let msgInputVal = document.getElementById('message').value;
+            m.innerHTML = `${msgInputVal}`;
+        }, 500);
+    });
+</script>
+
+<!-- update time -->
+<script>
+    document.getElementById('time').innerHTML = `${moment().calendar()}`;
+</script>
+
+<!-- send webhook -->
+<script>
+    let button = document.getElementById('sendWebhook');
+    button.addEventListener('click', () => {
+        try {
+            let whurl = document.getElementById('url').value;
+            let whusername = document.getElementById('username').value;
+            let whmessage = document.getElementById('message').value;
+
+            const messageData = {
+                "content": whmessage,
+                "username": whusername
+            }
+            fetch(whurl, {
+                "method": "POST",
+                "headers": {
+                    "content-type": "application/json"
+                },
+                "body": JSON.stringify(messageData)
+            }).then(
+                document.getElementById('success').innerHTML = `Webhook sent!`
+            );
+        } catch (err) {
+            document.getElementById('error').innerHTML = `Error! ${err}`;
+        }
+    });
+</script>
+</html>
